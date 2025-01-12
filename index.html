@@ -36,7 +36,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Get Your Location</h1>
+        <h1>Send Your Location</h1>
         <button id="getLocationBtn">Send Location</button>
         <p class="status" id="status"></p>
     </div>
@@ -52,28 +52,24 @@
                     const longitude = position.coords.longitude;
                     statusText.textContent = "Sending location...";
 
-                    // Use the local server URL here
-                    const url = 'https://anas-test.netlify.app/save-location'; 
-
-                    // Send the location data to the server
-                    fetch(url, {
+                    fetch('/save-location', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            ip: '192.168.11.103',  // You can use an external service to fetch the IP if needed
+                            ip: '192.168.11.103', // Replace with actual IP if needed
                             latitude: latitude,
                             longitude: longitude,
                             location: 'Detected Location'
                         })
                     })
                     .then(response => response.text())
-                    .then((data) => {
+                    .then(data => {
                         statusText.textContent = "Location sent successfully!";
                         console.log(data);
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         statusText.textContent = "Failed to send location.";
                         console.error("Error:", error);
                     });
