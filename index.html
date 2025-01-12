@@ -36,7 +36,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Send Your Location</h1>
+        <h1>Get Your Location</h1>
         <button id="getLocationBtn">Send Location</button>
         <p class="status" id="status"></p>
     </div>
@@ -52,24 +52,28 @@
                     const longitude = position.coords.longitude;
                     statusText.textContent = "Sending location...";
 
-                    fetch('/save-location', {
+                    // Replace with your Vercel function URL
+                    const url = 'https://anas-test-rouge.vercel.app/api/send-location'; // Replace with your actual Vercel URL
+
+                    // Send the location data to the serverless function
+                    fetch(url, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            ip: '192.168.11.103', // Replace with actual IP if needed
+                            ip: '192.168.11.103',  // You can use an external service to fetch the IP if needed
                             latitude: latitude,
                             longitude: longitude,
                             location: 'Detected Location'
                         })
                     })
-                    .then(response => response.text())
-                    .then(data => {
+                    .then(response => response.json())
+                    .then((data) => {
                         statusText.textContent = "Location sent successfully!";
                         console.log(data);
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         statusText.textContent = "Failed to send location.";
                         console.error("Error:", error);
                     });
