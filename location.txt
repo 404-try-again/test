@@ -1,1 +1,0 @@
-IP: 192.168.11.103, Latitude: 35.7676439, Longitude: -5.8047114, Location: Detected Location
