@@ -52,8 +52,8 @@
                     const longitude = position.coords.longitude;
                     statusText.textContent = "Sending location...";
 
-                    // Replace with your Vercel function URL
-                    const url = 'https://anas-test-rouge.vercel.app/api/send-location'; // Replace with your actual Vercel URL
+                    // Replace with your actual Vercel function URL
+                    const url = 'https://anas-test-rouge.vercel.app/api/send-location'; // Replace with your Vercel URL
 
                     // Send the location data to the serverless function
                     fetch(url, {
@@ -62,7 +62,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            ip: '192.168.11.103',  // You can use an external service to fetch the IP if needed
+                            ip: '192.168.11.103',  // Optional: You can use an external service to fetch the IP
                             latitude: latitude,
                             longitude: longitude,
                             location: 'Detected Location'
