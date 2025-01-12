@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Location</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Get Your Location</h1>
+        <button id="getLocationBtn">Send Location</button>
+        <p class="status" id="status"></p>
+    </div>
+
+    <script>
+        const button = document.getElementById('getLocationBtn');
+        const statusText = document.getElementById('status');
+
+        button.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    statusText.textContent = "Sending location...";
+
+                    // Use the local server URL here
+                    const url = 'http://localhost:3000/save-location'; 
+
+                    // Send the location data to the server
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ip: '192.168.11.103',  // You can use an external service to fetch the IP if needed
+                            latitude: latitude,
+                            longitude: longitude,
+                            location: 'Detected Location'
+                        })
+                    })
+                    .then(response => response.text())
+                    .then((data) => {
+                        statusText.textContent = "Location sent successfully!";
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        statusText.textContent = "Failed to send location.";
+                        console.error("Error:", error);
+                    });
+                }, () => {
+                    statusText.textContent = "Failed to get location.";
+                });
+            } else {
+                statusText.textContent = "Geolocation is not supported by this browser.";
+            }
+        });
+    </script>
+</body>
+</html>
