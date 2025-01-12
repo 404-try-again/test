@@ -1,8 +1,16 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');  // Import cors
 const app = express();
 const port = 3000;
+
+// Enable CORS for your Netlify domain (replace with your actual Netlify domain)
+app.use(cors({
+    origin: 'https://your-netlify-site-name.netlify.app',  // Replace with your Netlify domain
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
 
 app.use(express.json()); // Middleware to parse JSON data
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files (HTML, CSS, JS)
